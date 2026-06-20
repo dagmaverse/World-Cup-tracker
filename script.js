@@ -23,18 +23,32 @@ const $scoreSheetSection = document.getElementById('scoreSheetSection');
 const $lastUpdated = document.getElementById('lastUpdated');
 const $refreshButton = document.getElementById('refreshButton');
 const $pageLinks = Array.from(document.querySelectorAll('.page-link'));
-
-$refreshButton.addEventListener('click', () => fetchMatches(true));
-$pageLinks.forEach((button) => button.addEventListener('click', switchPage));
+const $pages = Array.from(document.querySelectorAll('.page'));
 
 function switchPage(event) {
   const target = event.currentTarget.dataset.page;
-  document.querySelectorAll('.page').forEach((page) => {
-    page.classList.toggle('active-page', page.id === target);
+  const targetPage = $pages.find((page) => page.id === target);
+  if (!targetPage) {
+    return;
+  }
+
+  $pages.forEach((page) => {
+    page.classList.toggle('active-page', page === targetPage);
   });
+
   $pageLinks.forEach((button) => {
     button.classList.toggle('active', button.dataset.page === target);
   });
+}
+
+function initializePageLinks() {
+  $refreshButton.addEventListener('click', () => fetchMatches(true));
+  $pageLinks.forEach((button) => button.addEventListener('click', switchPage));
+  if ($pages.length > 0) {
+    $pages.forEach((page, index) => {
+      page.classList.toggle('active-page', index === 0);
+    });
+  }
 }
 
 function getFlagUrl(country) {
@@ -327,6 +341,7 @@ async function fetchMatches(force = false) {
   }
 }
 
+initializePageLinks();
 fetchMatches();
 setInterval(fetchMatches, REFRESH_INTERVAL);
 
