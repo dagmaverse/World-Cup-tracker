@@ -110,18 +110,14 @@ function buildMatchCard(match, label) {
 }
 
 function groupMatches(matches) {
-  const now = new Date();
   const upcoming = [];
   const finished = [];
-  const knockout = [];
 
   matches.forEach((match) => {
     const isFinished = Array.isArray(match.score?.ft) && match.score.ft.length === 2;
     const isKnockout = !match.group && /Round|Final|Semi|Quarter|Play-off/i.test(match.round || '');
-    const start = parseMatchDate(match.date, match.time);
 
     if (isKnockout) {
-      knockout.push(match);
       return;
     }
 
@@ -135,8 +131,7 @@ function groupMatches(matches) {
 
   finished.sort((a, b) => parseMatchDate(b.date, b.time) - parseMatchDate(a.date, a.time));
   upcoming.sort((a, b) => parseMatchDate(a.date, a.time) - parseMatchDate(b.date, b.time));
-  knockout.sort((a, b) => parseMatchDate(a.date, a.time) - parseMatchDate(b.date, b.time));
-  return { finished, upcoming, knockout };
+  return { finished, upcoming };
 }
 
 function makeStandings(matches) {
@@ -301,12 +296,16 @@ async function fetchMatches(force = false) {
   try {
     $liveSection.innerHTML = '<p class="match-map">Loading match data…</p>';
     $upcomingSection.innerHTML = '<p class="match-map">Loading match data…</p>';
-    $knockoutSection.innerHTML = '<p class="match-map">Loading match data…</p>';
+    $resultsSection.innerHTML = '<p class="match-map">Loading match data…</p>';
+    $overviewUpcoming.innerHTML = '<p class="match-map">Loading match data…</p>';
+    $standingsSection.innerHTML = '<p class="match-map">Loading match data…</p>';
+    $scoreSheetSection.innerHTML = '<p class="match-map">Loading match data…</p>';
 
     const response = await fetch(DATA_URL, { cache: 'no-store' });
+    if (!response.ok) throw new Error(`API error: ${response.status}`);
     const json = await response.json();
     const matches = json.matches || [];
-    const { finished, upcoming, knockout } = groupMatches(matches);
+    const { finished, upcoming } = groupMatches(matches);
     const standings = makeStandings(matches);
 
     renderMatchSection($liveSection, finished.slice(0, 3), formatLiveLabel, 'No finished or live matches available yet.');
@@ -317,9 +316,13 @@ async function fetchMatches(force = false) {
     renderStandings(standings);
     setUpdateTime();
   } catch (error) {
-    $liveSection.innerHTML = '<p class="match-map">Unable to load data. Please try again later.</p>';
-    $upcomingSection.innerHTML = '<p class="match-map">Unable to load data. Please try again later.</p>';
-    $knockoutSection.innerHTML = '<p class="match-map">Unable to load data. Please try again later.</p>';
+    const errorMsg = '<p class="match-map">Unable to load data. Please try again later.</p>';
+    $liveSection.innerHTML = errorMsg;
+    $upcomingSection.innerHTML = errorMsg;
+    $resultsSection.innerHTML = errorMsg;
+    $overviewUpcoming.innerHTML = errorMsg;
+    $standingsSection.innerHTML = errorMsg;
+    $scoreSheetSection.innerHTML = errorMsg;
     console.error('World Cup data fetch failed:', error);
   }
 }
