@@ -115,6 +115,47 @@ button:hover {
   gap: 24px;
 }
 
+.page-nav {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 24px 0;
+}
+
+.page-link {
+  appearance: none;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 999px;
+  background: rgba(12, 55, 24, 0.9);
+  color: var(--text);
+  padding: 12px 18px;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.page-link:hover,
+.page-link.active {
+  background: linear-gradient(135deg, rgba(124, 225, 103, 0.2), rgba(128, 248, 160, 0.18));
+  transform: translateY(-1px);
+}
+
+.app-pages {
+  position: relative;
+}
+
+.page {
+  display: none;
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.page.active-page {
+  display: block;
+  opacity: 1;
+  transform: translateY(0);
+}
+
 .card {
   padding: 24px;
   background: var(--surface);
@@ -156,16 +197,35 @@ button:hover {
   display: grid;
   grid-template-columns: 1fr auto;
   gap: 18px;
-  align-items: center;
+  align-items: stretch;
   padding: 20px;
   border-radius: 24px;
   background: rgba(20, 65, 26, 0.92);
   border: 1px solid rgba(132, 233, 131, 0.12);
 }
 
-.match-body {
+.match-card .match-body {
   display: grid;
   gap: 14px;
+}
+
+.match-insight {
+  display: grid;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  text-align: right;
+}
+
+.match-insight strong {
+  color: var(--accent-strong);
+  font-size: 0.98rem;
+}
+
+.match-insight p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.5;
 }
 
 .team-row {
@@ -285,6 +345,10 @@ button:hover {
     align-items: stretch;
   }
 
+  .page-nav {
+    justify-content: center;
+  }
+
   .match-card {
     grid-template-columns: 1fr;
   }
@@ -297,4 +361,53 @@ button:hover {
   .section-meta {
     text-align: left;
   }
+}
+
+.score-sheet {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.bracket-column {
+  display: grid;
+  gap: 16px;
+}
+
+.bracket-title {
+  margin: 0 0 10px;
+  color: var(--accent-strong);
+  font-weight: 700;
+}
+
+.bracket-card {
+  padding: 18px;
+  border-radius: 22px;
+  background: rgba(21, 69, 28, 0.92);
+  border: 1px solid rgba(166, 255, 154, 0.12);
+}
+
+.bracket-card p {
+  margin: 0;
+  color: var(--text);
+}
+
+.bracket-team {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin: 10px 0;
+}
+
+.bracket-team span {
+  font-size: 0.95rem;
+}
+
+.bracket-team .score {
+  min-width: 2rem;
+  padding: 8px 10px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.08);
+  text-align: center;
 }

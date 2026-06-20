@@ -20,47 +20,88 @@
       </div>
     </header>
 
-    <main class="content-grid">
-      <section class="card card--wide">
-        <div class="section-heading">
-          <div>
-            <p class="eyebrow">Match Spotlight</p>
-            <h2>Next Matches & recent results</h2>
+    <nav class="page-nav" aria-label="Primary navigation">
+      <button class="page-link active" data-page="overviewPage">Overview</button>
+      <button class="page-link" data-page="upcomingPage">Upcoming</button>
+      <button class="page-link" data-page="resultsPage">Results</button>
+      <button class="page-link" data-page="standingsPage">Standings</button>
+      <button class="page-link" data-page="scoreSheetPage">Score Sheet</button>
+    </nav>
+
+    <main class="app-pages">
+      <section id="overviewPage" class="page active-page">
+        <div class="card card--wide">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Match Spotlight</p>
+              <h2>Next match and recent results</h2>
+            </div>
+            <div class="section-meta">Top headlines from the dataset</div>
           </div>
-          <div class="section-meta">Powered by a public World Cup dataset</div>
+          <div id="liveSection" class="match-group"></div>
         </div>
-        <div id="liveSection" class="match-group"></div>
+
+        <div class="card">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Schedule</p>
+              <h2>Next upcoming fixtures</h2>
+            </div>
+          </div>
+          <div id="overviewUpcoming" class="match-group"></div>
+        </div>
       </section>
 
-      <section class="card">
-        <div class="section-heading">
-          <div>
-            <p class="eyebrow">Schedule</p>
-            <h2>Upcoming matches</h2>
+      <section id="upcomingPage" class="page">
+        <div class="card card--wide">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Upcoming matches</p>
+              <h2>Future World Cup fixtures</h2>
+            </div>
+            <div class="section-meta">Full schedule from the dataset</div>
           </div>
+          <div id="upcomingSection" class="match-group"></div>
         </div>
-        <div id="upcomingSection" class="match-group"></div>
       </section>
 
-      <section class="card card--wide">
-        <div class="section-heading">
-          <div>
-            <p class="eyebrow">Group stage</p>
-            <h2>Standings by group</h2>
+      <section id="resultsPage" class="page">
+        <div class="card card--wide">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Results</p>
+              <h2>Previous match status</h2>
+            </div>
+            <div class="section-meta">Recent completed games and outcomes</div>
           </div>
-          <div class="section-meta">Calculated from match results</div>
+          <div id="resultsSection" class="match-group"></div>
         </div>
-        <div id="standingsSection" class="standings-grid"></div>
       </section>
 
-      <section class="card">
-        <div class="section-heading">
-          <div>
-            <p class="eyebrow">Knockout path</p>
-            <h2>Round preview</h2>
+      <section id="standingsPage" class="page">
+        <div class="card card--wide">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Group stage</p>
+              <h2>Standings by group</h2>
+            </div>
+            <div class="section-meta">Calculated from match results</div>
           </div>
+          <div id="standingsSection" class="standings-grid"></div>
         </div>
-        <div id="knockoutSection" class="match-group"></div>
+      </section>
+
+      <section id="scoreSheetPage" class="page">
+        <div class="card card--wide">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Score sheet</p>
+              <h2>Bracket and knockout preview</h2>
+            </div>
+            <div class="section-meta">A sheet-like view for elimination fixtures</div>
+          </div>
+          <div id="scoreSheetSection" class="score-sheet"></div>
+        </div>
       </section>
     </main>
   </div>

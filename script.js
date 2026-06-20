@@ -14,14 +14,28 @@ const teamIso = {
   USA: 'us', 'Bosnia & Herzegovina': 'ba', 'Curaçao': 'cw', 'Wales': 'gb-wls', 'Northern Ireland': 'gb-nir'
 };
 
+const $overviewUpcoming = document.getElementById('overviewUpcoming');
 const $liveSection = document.getElementById('liveSection');
 const $upcomingSection = document.getElementById('upcomingSection');
+const $resultsSection = document.getElementById('resultsSection');
 const $standingsSection = document.getElementById('standingsSection');
-const $knockoutSection = document.getElementById('knockoutSection');
+const $scoreSheetSection = document.getElementById('scoreSheetSection');
 const $lastUpdated = document.getElementById('lastUpdated');
 const $refreshButton = document.getElementById('refreshButton');
+const $pageLinks = Array.from(document.querySelectorAll('.page-link'));
 
 $refreshButton.addEventListener('click', () => fetchMatches(true));
+$pageLinks.forEach((button) => button.addEventListener('click', switchPage));
+
+function switchPage(event) {
+  const target = event.currentTarget.dataset.page;
+  document.querySelectorAll('.page').forEach((page) => {
+    page.classList.toggle('active-page', page.id === target);
+  });
+  $pageLinks.forEach((button) => {
+    button.classList.toggle('active', button.dataset.page === target);
+  });
+}
 
 function getFlagUrl(country) {
   const code = teamIso[country] || teamIso[country.replace(/\s+/g, '')];
@@ -70,7 +84,12 @@ function buildMatchCard(match, label) {
   const time = parseMatchDate(match.date, match.time);
   const dateText = time.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' });
   const timeText = time.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
-  const status = match.score?.ft?.length === 2 ? 'Finished' : 'Upcoming';
+  const isFinished = Array.isArray(match.score?.ft) && match.score.ft.length === 2;
+  const status = isFinished ? 'Finished' : 'Scheduled';
+  const resultText = isFinished
+    ? `Final ${match.score.ft[0]}–${match.score.ft[1]}`
+    : `Starts ${dateText} ${timeText}`;
+
   return `
     <article class="match-card">
       <div class="match-body">
@@ -84,7 +103,7 @@ function buildMatchCard(match, label) {
       </div>
       <div class="match-insight">
         <strong>${label}</strong>
-        <p>${match.round || 'Group stage fixture'}</p>
+        <p>${resultText}</p>
       </div>
     </article>
   `;
@@ -209,6 +228,59 @@ function renderMatchSection(container, matches, label, emptyMessage) {
   container.innerHTML = matches.map((match, idx) => buildMatchCard(match, label(idx))).join('');
 }
 
+function renderScoreSheet(container, matches) {
+  if (matches.length === 0) {
+    container.innerHTML = '<p class="match-map">No bracket data available yet.</p>';
+    return;
+  }
+
+  const knockoutMatches = matches.filter((match) => !match.group);
+  const roundOrder = {
+    'Round of 32': 0,
+    'Round of 16': 1,
+    'Quarter-final': 2,
+    'Semi-final': 3,
+    'Match for third place': 4,
+    Final: 5,
+  };
+
+  const groupByRound = knockoutMatches.reduce((acc, match) => {
+    const round = match.round || 'Knockout';
+    acc[round] ??= [];
+    acc[round].push(match);
+    return acc;
+  }, {});
+
+  const columns = Object.keys(groupByRound)
+    .sort((a, b) => (roundOrder[a] ?? 99) - (roundOrder[b] ?? 99))
+    .map((round) => ({ title: round, matches: groupByRound[round] }));
+
+  container.innerHTML = columns
+    .map((column) => {
+      const rows = column.matches
+        .map((match) => {
+          const score1 = match.score?.ft?.[0] ?? '-';
+          const score2 = match.score?.ft?.[1] ?? '-';
+          return `
+            <div class="bracket-card">
+              <p class="bracket-title">${match.round || 'Fixture'}</p>
+              <div class="bracket-team"><span>${match.team1}</span><span class="score">${score1}</span></div>
+              <div class="bracket-team"><span>${match.team2}</span><span class="score">${score2}</span></div>
+              <p class="match-map">${match.date} · ${match.ground || 'Venue TBA'}</p>
+            </div>
+          `;
+        })
+        .join('');
+      return `
+        <div class="bracket-column">
+          <h3 class="bracket-title">${column.title}</h3>
+          ${rows || '<p class="match-map">No matches in this round yet.</p>'}
+        </div>
+      `;
+    })
+    .join('');
+}
+
 function formatLiveLabel(index) {
   return index === 0 ? 'Next on the pitch' : 'Recent result';
 }
@@ -217,8 +289,8 @@ function formatUpcomingLabel(index) {
   return index === 0 ? 'Up next' : 'Coming soon';
 }
 
-function formatKnockoutLabel(index) {
-  return index === 0 ? 'Knockout preview' : 'Knockout fixture';
+function formatResultLabel(index) {
+  return index === 0 ? 'Latest result' : 'Previous match';
 }
 
 function setUpdateTime() {
@@ -237,9 +309,11 @@ async function fetchMatches(force = false) {
     const { finished, upcoming, knockout } = groupMatches(matches);
     const standings = makeStandings(matches);
 
-    renderMatchSection($liveSection, finished.slice(0, 4), formatLiveLabel, 'No finished or live matches available yet.');
-    renderMatchSection($upcomingSection, upcoming.slice(0, 8), formatUpcomingLabel, 'No upcoming matches found in the dataset.');
-    renderMatchSection($knockoutSection, knockout.slice(0, 6), formatKnockoutLabel, 'No knockout matches are available yet.');
+    renderMatchSection($liveSection, finished.slice(0, 3), formatLiveLabel, 'No finished or live matches available yet.');
+    renderMatchSection($overviewUpcoming, upcoming.slice(0, 3), formatUpcomingLabel, 'No upcoming matches found in the dataset.');
+    renderMatchSection($upcomingSection, upcoming, formatUpcomingLabel, 'No upcoming matches found in the dataset.');
+    renderMatchSection($resultsSection, finished, formatResultLabel, 'No previous match results available yet.');
+    renderScoreSheet($scoreSheetSection, matches);
     renderStandings(standings);
     setUpdateTime();
   } catch (error) {
