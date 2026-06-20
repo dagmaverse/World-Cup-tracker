@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>World Cup Tracker 2026</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="page-shell">
+    <header class="hero-panel">
+      <div>
+        <p class="eyebrow">World Cup 2026 Tracker</p>
+        <h1>Live scores, upcoming matches, and group standings</h1>
+        <p class="hero-copy">A modern, responsive dashboard for the 2026 FIFA World Cup. Automatically refreshes data from a public source and highlights the next fixtures, recent results, and group tables.</p>
+      </div>
+      <div class="hero-actions">
+        <div class="status-pill">Updated: <span id="lastUpdated">Loading…</span></div>
+        <button id="refreshButton" type="button">Refresh now</button>
+      </div>
+    </header>
+
+    <main class="content-grid">
+      <section class="card card--wide">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Match Spotlight</p>
+            <h2>Next Matches & recent results</h2>
+          </div>
+          <div class="section-meta">Powered by a public World Cup dataset</div>
+        </div>
+        <div id="liveSection" class="match-group"></div>
+      </section>
+
+      <section class="card">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Schedule</p>
+            <h2>Upcoming matches</h2>
+          </div>
+        </div>
+        <div id="upcomingSection" class="match-group"></div>
+      </section>
+
+      <section class="card card--wide">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Group stage</p>
+            <h2>Standings by group</h2>
+          </div>
+          <div class="section-meta">Calculated from match results</div>
+        </div>
+        <div id="standingsSection" class="standings-grid"></div>
+      </section>
+
+      <section class="card">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Knockout path</p>
+            <h2>Round preview</h2>
+          </div>
+        </div>
+        <div id="knockoutSection" class="match-group"></div>
+      </section>
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
