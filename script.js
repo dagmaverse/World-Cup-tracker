@@ -326,3 +326,11 @@ async function fetchMatches(force = false) {
 
 fetchMatches();
 setInterval(fetchMatches, REFRESH_INTERVAL);
+
+// Initialize AOS animations
+AOS.init({
+  duration: 800,
+  easing: 'ease-in-out-cubic',
+  once: false,
+  mirror: true,
+});

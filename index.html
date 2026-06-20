@@ -4,11 +4,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>World Cup Tracker 2026</title>
+  <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <div class="page-shell">
-    <header class="hero-panel">
+    <header class="hero-panel" data-aos="fade-up" data-aos-duration="800">
       <div>
         <p class="eyebrow">World Cup 2026 Tracker</p>
         <h1>Live scores, upcoming matches, and group standings</h1>
@@ -20,7 +21,7 @@
       </div>
     </header>
 
-    <nav class="page-nav" aria-label="Primary navigation">
+    <nav class="page-nav" aria-label="Primary navigation" data-aos="fade-up" data-aos-delay="200" data-aos-duration="800">
       <button class="page-link active" data-page="overviewPage">Overview</button>
       <button class="page-link" data-page="upcomingPage">Upcoming</button>
       <button class="page-link" data-page="resultsPage">Results</button>
@@ -52,7 +53,7 @@
         </div>
       </section>
 
-      <section id="upcomingPage" class="page">
+      <section id="upcomingPage" class="page" data-aos="fade-up" data-aos-duration="800">
         <div class="card card--wide">
           <div class="section-heading">
             <div>
@@ -65,7 +66,7 @@
         </div>
       </section>
 
-      <section id="resultsPage" class="page">
+      <section id="resultsPage" class="page" data-aos="fade-up" data-aos-duration="800">
         <div class="card card--wide">
           <div class="section-heading">
             <div>
@@ -78,7 +79,7 @@
         </div>
       </section>
 
-      <section id="standingsPage" class="page">
+      <section id="standingsPage" class="page" data-aos="fade-up" data-aos-duration="800">
         <div class="card card--wide">
           <div class="section-heading">
             <div>
@@ -91,7 +92,7 @@
         </div>
       </section>
 
-      <section id="scoreSheetPage" class="page">
+      <section id="scoreSheetPage" class="page" data-aos="fade-up" data-aos-duration="800">
         <div class="card card--wide">
           <div class="section-heading">
             <div>
@@ -106,6 +107,7 @@
     </main>
   </div>
 
+  <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
